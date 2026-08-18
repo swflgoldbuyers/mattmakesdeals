@@ -305,9 +305,9 @@ h2 {
 .nav-toggle::after {
   content: "";
   position: absolute;
-  left: 0.55rem;
-  right: 0.55rem;
-  height: 1px;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 1.5px;
   background: var(--ink);
   transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), top 0.3s var(--ease);
 }
@@ -557,7 +557,8 @@ body.nav-open .nav-toggle::after {
   object-fit: cover;
   object-position: center 18%;
   filter: contrast(1.04);
-  box-shadow: var(--shadow);
+  outline: 1px solid var(--gold-line);
+  box-shadow: 1.5rem 1.75rem 3.5rem rgba(0, 0, 0, 0.45);
 }
 
 .about-media figcaption {
@@ -652,6 +653,8 @@ body.nav-open .nav-toggle::after {
   min-height: 220px;
   color: var(--ink);
   isolation: isolate;
+  box-shadow: inset 0 0 0 1px transparent;
+  transition: box-shadow 0.35s var(--ease);
 }
 
 .market-card:nth-child(1) {
@@ -719,6 +722,10 @@ body.nav-open .nav-toggle::after {
 
 .market-card .more {
   margin-top: 0.85rem;
+}
+
+.market-card:hover {
+  box-shadow: inset 0 0 0 1px var(--gold-line);
 }
 
 .market-card:hover img {
@@ -873,14 +880,14 @@ body.nav-open .nav-toggle::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(0.35) contrast(1.05);
+  filter: grayscale(0.2) contrast(1.04);
 }
 
 .quote-media::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(8, 8, 8, 0.78);
+  background: rgba(8, 8, 8, 0.62);
 }
 
 .quote-inner {
@@ -1089,7 +1096,7 @@ body.nav-open .nav-toggle::after {
   padding-top: 1.3rem;
   border-top: 1px solid var(--line);
   color: var(--ink-dim);
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.04em;
 }
 
@@ -1139,7 +1146,7 @@ html.js .reveal.is-in {
 
   .hero-copy {
     grid-row: 2;
-    padding: 2.2rem var(--pad-x) 1.5rem;
+    padding: 2.2rem var(--pad-x) 1.75rem;
     max-width: none;
   }
 
