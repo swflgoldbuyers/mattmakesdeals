@@ -1,4 +1,5 @@
 (() => {
+  document.documentElement.classList.add("js");
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".scroll-bar");
   const toggle = document.querySelector(".nav-toggle");
@@ -6,7 +7,9 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const onScroll = () => {
-    if (header) header.classList.toggle("is-scrolled", window.scrollY > 18);
+    if (!header) return;
+    const innerPage = !document.querySelector(".hero");
+    header.classList.toggle("is-scrolled", innerPage || window.scrollY > 18);
     if (!progress) return;
     const max = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.width = `${max > 0 ? (window.scrollY / max) * 100 : 0}%`;
