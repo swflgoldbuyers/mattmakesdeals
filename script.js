@@ -1,167 +1,73 @@
-// ===========================
-// SCROLL PROGRESS BAR
-// ===========================
-
-const progressBar = document.querySelector(".scroll-bar");
-
-window.addEventListener("scroll", () => {
-
-    const scroll =
-        window.scrollY;
-
-    const height =
-        document.documentElement.scrollHeight -
-        window.innerHeight;
-
-    const progress =
-        (scroll / height) * 100;
-
-    progressBar.style.width = progress + "%";
-
-});
-
-// ===========================
-// NAVBAR
-// ===========================
-
-const nav = document.querySelector("nav");
-
-window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 80) {
-
-        nav.classList.add("scrolled");
-
-    } else {
-
-        nav.classList.remove("scrolled");
-
-    }
-
-});
-
-// ===========================
-// FADE IN SECTIONS
-// ===========================
-
-const observer = new IntersectionObserver(
-
-(entries) => {
-
-entries.forEach(entry => {
-
-if (entry.isIntersecting) {
-
-entry.target.classList.add("show");
-
-}
-
-});
-
-},
-
-{
-
-threshold: .15
-
-}
-
-);
-
-document.querySelectorAll(".fade").forEach(section => {
-
-observer.observe(section);
-
-});
-
-// ===========================
-// PARALLAX HERO
-// ===========================
-
-const hero = document.querySelector(".hero");
-
-window.addEventListener("scroll", () => {
-
-const offset = window.pageYOffset;
-
-hero.style.backgroundPositionY = offset * 0.45 + "px";
-
-});
-
-// ===========================
-// HERO TEXT FADE
-// ===========================
-
-const heroContent =
-document.querySelector(".hero-content");
-
-window.addEventListener("scroll", () => {
-
-const opacity = 1 - window.scrollY / 600;
-
-heroContent.style.opacity = opacity;
-
-heroContent.style.transform =
-`translateY(${window.scrollY * .18}px)`;
-
-});
-
-// ===========================
-// MARKET CARD HOVER
-// ===========================
-
-document.querySelectorAll(".market-card").forEach(card => {
-
-card.addEventListener("mousemove", e => {
-
-const rect = card.getBoundingClientRect();
-
-const x =
-e.clientX - rect.left;
-
-const y =
-e.clientY - rect.top;
-
-card.style.backgroundPosition =
-
-`${50 + (x - rect.width / 2) / 25}% ${50 + (y - rect.height / 2) / 25}%`;
-
-});
-
-card.addEventListener("mouseleave", () => {
-
-card.style.backgroundPosition = "center";
-
-});
-
-});
-
-// ===========================
-// BUTTON RIPPLE
-// ===========================
-
-document.querySelectorAll(".btn,.btn-outline").forEach(button=>{
-
-button.addEventListener("mouseenter",()=>{
-
-button.style.transition=".3s";
-
-});
-
-button.addEventListener("mouseleave",()=>{
-
-button.style.transition=".35s";
-
-});
-
-});
-
-// ===========================
-// SMOOTH LOAD
-// ===========================
-
-window.addEventListener("load",()=>{
-
-document.body.style.opacity="1";
-
-});
+(() => {
+  document.documentElement.classList.add("js");
+  const header = document.querySelector(".site-header");
+  const progress = document.querySelector(".scroll-bar");
+  const toggle = document.querySelector(".nav-toggle");
+  const navLinks = document.querySelectorAll(".nav-list a[href]");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const onScroll = () => {
+    if (!header) return;
+    const innerPage = !document.querySelector(".hero");
+    header.classList.toggle("is-scrolled", innerPage || window.scrollY > 18);
+    if (!progress) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = `${max > 0 ? (window.scrollY / max) * 100 : 0}%`;
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const closeNav = () => {
+    document.body.classList.remove("nav-open");
+    if (toggle) toggle.setAttribute("aria-expanded", "false");
+  };
+
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const open = document.body.classList.toggle("nav-open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    });
+  }
+
+  navLinks.forEach((link) => link.addEventListener("click", closeNav));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeNav();
+  });
+
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  } else {
+    document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));
+  }
+
+  const pageSections = document.querySelectorAll("main > section[id]");
+  if (pageSections.length && "IntersectionObserver" in window) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          navLinks.forEach((link) => {
+            const href = link.getAttribute("href") || "";
+            if (!href.includes("#")) return;
+            link.classList.toggle("is-active", href.endsWith(`#${id}`));
+          });
+        });
+      },
+      { rootMargin: "-42% 0px -48% 0px", threshold: 0.05 }
+    );
+    pageSections.forEach((section) => spy.observe(section));
+  }
+})();
